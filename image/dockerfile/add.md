@@ -8,7 +8,7 @@
 
 在某些情况下，这个自动解压缩的功能非常有用，比如官方镜像 `ubuntu` 中：
 
-```Dockerfile
+```docker
 FROM scratch
 ADD ubuntu-xenial-core-cloudimg-amd64-root.tar.gz /
 ...
@@ -16,8 +16,17 @@ ADD ubuntu-xenial-core-cloudimg-amd64-root.tar.gz /
 
 但在某些情况下，如果我们真的是希望复制个压缩文件进去，而不解压缩，这时就不可以使用 `ADD` 命令了。
 
-在 Docker 官方的最佳实践文档中要求，尽可能的使用 `COPY`，因为 `COPY` 的语义很明确，就是复制文件而已，而 `ADD` 则包含了更复杂的功能，其行为也不一定很清晰。最适合使用 `ADD` 的场合，就是所提及的需要自动解压缩的场合。
+在 Docker 官方的 [Dockerfile 最佳实践文档](../../appendix/best_practices.md) 中要求，尽可能的使用 `COPY`，因为 `COPY` 的语义很明确，就是复制文件而已，而 `ADD` 则包含了更复杂的功能，其行为也不一定很清晰。最适合使用 `ADD` 的场合，就是所提及的需要自动解压缩的场合。
 
 另外需要注意的是，`ADD` 指令会令镜像构建缓存失效，从而可能会令镜像构建变得比较缓慢。
 
 因此在 `COPY` 和 `ADD` 指令中选择的时候，可以遵循这样的原则，所有的文件复制均使用 `COPY` 指令，仅在需要自动解压缩的场合使用 `ADD`。
+
+在使用该指令的时候还可以加上 `--chown=<user>:<group>` 选项来改变文件的所属用户及所属组。
+
+```docker
+ADD --chown=55:mygroup files* /mydir/
+ADD --chown=bin files* /mydir/
+ADD --chown=1 files* /mydir/
+ADD --chown=10:11 files* /mydir/
+```

@@ -25,7 +25,7 @@
 
 假设我们有个镜像是个最简单的 Web 服务，我们希望增加健康检查来判断其 Web 服务是否在正常工作，我们可以用 `curl` 来帮助判断，其 `Dockerfile` 的 `HEALTHCHECK` 可以这么写：
 
-```Dockerfile
+```docker
 FROM nginx
 RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
 HEALTHCHECK --interval=5s --timeout=3s \
@@ -46,18 +46,18 @@ $ docker build -t myweb:v1 .
 $ docker run -d --name web -p 80:80 myweb:v1
 ```
 
-当运行该镜像后，可以通过 `docker ps` 看到最初的状态为 `(health: starting)`：
+当运行该镜像后，可以通过 `docker container ls` 看到最初的状态为 `(health: starting)`：
 
 ```bash
-$ docker ps
+$ docker container ls
 CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                            PORTS               NAMES
 03e28eb00bd0        myweb:v1            "nginx -g 'daemon off"   3 seconds ago       Up 2 seconds (health: starting)   80/tcp, 443/tcp     web
 ```
 
-在等待几秒钟后，再次 `docker ps`，就会看到健康状态变化为了 `(healthy)`：
+在等待几秒钟后，再次 `docker container ls`，就会看到健康状态变化为了 `(healthy)`：
 
 ```bash
-$ docker ps
+$ docker container ls
 CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                    PORTS               NAMES
 03e28eb00bd0        myweb:v1            "nginx -g 'daemon off"   18 seconds ago      Up 16 seconds (healthy)   80/tcp, 443/tcp     web
 ```

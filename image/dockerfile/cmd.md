@@ -14,13 +14,13 @@
 
 如果使用 `shell` 格式的话，实际的命令会被包装为 `sh -c` 的参数的形式进行执行。比如：
 
-```Dockerfile
+```docker
 CMD echo $HOME
 ```
 
 在实际执行中，会将其变更为：
 
-```Dockerfile
+```docker
 CMD [ "sh", "-c", "echo $HOME" ]
 ```
 
@@ -28,11 +28,11 @@ CMD [ "sh", "-c", "echo $HOME" ]
 
 提到 `CMD` 就不得不提容器中应用在前台执行和后台执行的问题。这是初学者常出现的一个混淆。
 
-Docker 不是虚拟机，容器中的应用都应该以前台执行，而不是像虚拟机、物理机里面那样，用 upstart/systemd 去启动后台服务，容器内没有后台服务的概念。
+Docker 不是虚拟机，容器中的应用都应该以前台执行，而不是像虚拟机、物理机里面那样，用 `systemd` 去启动后台服务，容器内没有后台服务的概念。
 
 一些初学者将 `CMD` 写为：
 
-```Dockerfile
+```docker
 CMD service nginx start
 ```
 
@@ -44,6 +44,6 @@ CMD service nginx start
 
 正确的做法是直接执行 `nginx` 可执行文件，并且要求以前台形式运行。比如：
 
-```Dockerfile
+```docker
 CMD ["nginx", "-g", "daemon off;"]
 ```
